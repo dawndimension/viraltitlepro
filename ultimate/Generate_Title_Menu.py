@@ -14,12 +14,12 @@ def copy2clip(txt):
     return subprocess.check_call(cmd, shell=True)
 
 layout = [
-            [sg.Text('Viral Title Ultimate')],      
+            [sg.Text('Viral Title Generator')],      
             [sg.Text('Enter your Subject')],
             [sg.Input(do_not_clear=True, enable_events=True, key='_IN_', size=(35,5))],
             [sg.Button('Generate'),sg.Button('Exit')],
             [sg.Input('--Generated Title--',size=(50,5), key='_OUT_')],
-            [sg.Button('Copy to Clipboard')],
+            [sg.Button('⧉')],
          ]
 
 # Create the Window
@@ -37,6 +37,6 @@ while True:             # Event Loop
         title = generate_title_placeholder(values['_IN_'])        
         window.Element('_OUT_').update("x")
         window.Element('_OUT_').update(title)
-    if event == 'Copy to Clipboard':
+    if event == '⧉':
         copy2clip(values['_OUT_'])
 window.Close()

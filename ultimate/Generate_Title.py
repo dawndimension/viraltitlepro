@@ -14,6 +14,14 @@ space = " "
 
 #main entry point
 #this function returns the generated title
+def generate_multiple_titles(subject, tags, title_count):
+	titles = []
+	for x in range(0, title_count):
+		print(x)
+		titles.append(generate_title(subject, tags))
+	print(titles)
+	return titles
+
 def generate_title(subject, tags):
 	suffix = generate_suffix()
 	prefix = generate_prefix()
@@ -22,7 +30,7 @@ def generate_title(subject, tags):
 
 def generate_prefix():
 	Prefix = Query()
-	prefix_type_selector = ["the","basically the", "essentially the", "surely the", "truly the"]
+	prefix_type_selector = ["the","the"]
 	prefix_choice = random_index(prefix_type_selector)
 	#print (prefix_type_selector[prefix_choice])
 
