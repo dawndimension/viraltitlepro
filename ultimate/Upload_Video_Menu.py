@@ -4,6 +4,7 @@ import subprocess
 from Generate_Title import *
 from array import *
 
+#https://github.com/dawndimension/viraltitlepro
 #variables
 title = None
 video_count = 0
