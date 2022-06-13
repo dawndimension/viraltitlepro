@@ -1,16 +1,17 @@
 #Generate_Title.py
 
-import language_tool_python
 import sys
 import os
 import random
 import datetime
 from random import randint
 from tinydb import TinyDB, Query
-
+from Grammar_Checker import *
+from Grammar_Filter_Custom import*
 
 db = TinyDB('db.json')
 space = " "
+subject = "video"
 
 #main entry point
 #this function returns the generated title
@@ -23,10 +24,16 @@ def generate_multiple_titles(subject, tags, title_count):
 	return titles
 
 def generate_title(subject, tags):
+	if subject == "" or subject == None:
+		subject = "video"
 	suffix = generate_suffix()
 	prefix = generate_prefix()
 	#print (prefix +space+ subject +space+ suffix)
-	return ((prefix +space+ subject +space+ suffix).title())
+	#.title() is built in python to make the text title-case
+	raw_title = ((prefix +space+ subject +space+ suffix).title())
+	#title = grammar_replace(raw_title)
+	title = grammar_filter(raw_title)
+	return title
 
 def generate_prefix():
 	Prefix = Query()
@@ -67,7 +74,7 @@ def generate_suffix():
 
 	if suffix_type_selector[suffix_choice] == "suffix_wants_custom":
 		typeOfSuffix = "custom";
-		custom_type_selector = ["-", "|", "","","",""]
+		custom_type_selector = ["-", "|", "...","","",""]
 		custom_suffix_choice = random_index(custom_type_selector)
 		#print (custom_type_selector[custom_suffix_choice])
 				
@@ -84,5 +91,5 @@ def random_index(array):
 	return random_index
 
 
-
-#generate_title("Putt", "#shorts")
+#test script with this uncommented
+#print(generate_title("Putt", "#shorts"))
