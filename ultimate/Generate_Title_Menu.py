@@ -5,7 +5,7 @@
 import PySimpleGUI as sg
 import subprocess
 from Generate_Title import *
-
+import pyperclip as pc
 
 sg.theme('BlueMono')   # Add a touch of color
 sg.theme_input_text_color('black')
@@ -14,9 +14,11 @@ def generate_title_placeholder(message):
     return (generate_title(message,"#shorts"))
 
 def copy2clip(txt):
-    cmd='echo '+txt.strip()+'|clip'
-    return subprocess.check_call(cmd, shell=True)
-
+    clip = pc.copy(txt)
+    # old way cmd='echo '+txt.strip()+'|clip'
+    #return subprocess.check_call(cmd, shell=True)
+    return clip
+    
 layout = [
             [sg.Text('Viral Title Generator')],      
             [sg.Text('Enter your Subject')],
@@ -47,5 +49,5 @@ while True:             # Event Loop
         window.Element('_OUT_').update("x")
         window.Element('_OUT_').update(title+" "+tags)
     if event == '⧉':
-        copy2clip(values['_OUT_'])
+        copy2clip(str(values['_OUT_']))
 window.Close()

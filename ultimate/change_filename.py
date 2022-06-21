@@ -1,6 +1,10 @@
 import os
-from pickle import TRUE
+import os.path
+from pickle import FALSE, TRUE
 import random
+from Generate_Title import *
+import glob
+
 # importing all the
 # functions defined in test.py
 #from test import *
@@ -21,45 +25,83 @@ import random
 #print(old_file_name + " renamed to " + new_file_name);
 # end test code
 
-staging_dir="title_staging"
+
+
+#can be a separate product from viral title pro. Will have it's own simple GUI and will be a free bonus software
+
+staging_dir="C:\\Users\\Brandon\\Desktop\\MINIGOLFUS\\exports\\_STAGING\\experiment-616"
 file_list = ""
 subject = "putt"
 titles = []
+tags = "#shorts #minigolf #golf"
+file_extension = ".mp4"
 
 def get_files(staging_dir):       # 1.Get file names from directory
-    file_list=os.listdir(staging_dir)
-    print (file_list)
+    #file_list=os.listdir(staging_dir)
+    #print ("Files in selected directory: "+str(file_list))
+    
+    # Get list of all files in a given directory sorted by name
+    file_list = sorted( filter( lambda x: os.path.isfile(os.path.join(staging_dir, x)),
+                        os.listdir(staging_dir) ) )
+    for file_name in file_list:
+      print(file_name)
+    
     return (file_list)
 
-#2 options. generate and rename each at a time, or generate all titles, and then rename all files. Test later what quicker. start with gen all, rename all
-def generate_title_main(file_count):
-  print("There are "+ str(file_count) + " video file(s)")
-  #generate file_count titles
-  #create and return array or something of titles
-  demo_titles = ["Craziest putt you'll ever see #shorts.mp4", "Wildest Putt this century #shorts.mp4", "Luckiest Hole in One #shorts.mp4", "Coolest Putt this Decade #shorts.mp4", "Best Shot of the Year #shorts.mp4"]
-  for x in range(file_count):
-    titles.append(random.choice(demo_titles))    
-  return titles
+def generate_filename_handler(subject,tags):
+  new_title = generate_title(subject,tags)
+  if "|" in new_title:
+    new_title = new_title.replace("|", " - ")
+  if "..." in new_title:
+    new_title = new_title.replace("...", " - ")
+  if "This World" in new_title:
+    new_title = new_title.replace("This World", "The World")
+  
+  filename = new_title+" "+tags+file_extension
+  print("New filename: "+filename)
+  return filename
 
-#better to just select random name at renaming step?
-def rename_files(files, new_titles):
-    index = 0
-    #overwrite bc issue
-    files = os.listdir(staging_dir)
-    os.chdir(r"title_staging")
-    for i in files:
-        print(i)
-        print(index)
-        print("current files:"+files[index])
-        print("new titles:"+new_titles[index])
-        os.rename(files[index], new_titles[index])
-        index += 1
-    return TRUE
+
+def rename_files_handler(files, staging_dir):
+  os.chdir(staging_dir)
+
+  print("Looping through current files in directory: "+staging_dir)
+  for index, old_filename in enumerate(files):
+    print (index, ",",old_filename)
+    print("current filename:"+files[index])
+        
+    filename = generate_filename_handler(subject,tags)
+    file_exists = os.path.exists(filename)
+
+    while file_exists:
+      print("File exists already, finding a different name...")
+      filename = generate_filename_handler(subject,tags)
+      file_exists = os.path.exists(filename)
+
+    print("--")
+    try:
+      print("trying to rename files")
+      os.rename(files[index], filename)   
+        
+    except FileExistsError:
+      print("File already exists, trying different name...")
+          
+    except:
+      print("An exception occurred")
+      return False
+
+    #iteration
+    print("--------------")
+  
+  #End Loop
+  print("Finished Changing Filenames for "+str(index+1)+" files")
+  print ("DONE")
+  return True
+    
 
 
 file_list = get_files(staging_dir)
-titles = generate_title_main(len(file_list))
-Success = rename_files(file_list, titles)
+Success = rename_files_handler(file_list, staging_dir)
 
 
 
