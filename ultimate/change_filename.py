@@ -29,11 +29,12 @@ import glob
 
 #can be a separate product from viral title pro. Will have it's own simple GUI and will be a free bonus software
 
-staging_dir="C:\\Users\\Brandon\\Desktop\\MINIGOLFUS\\exports\\_STAGING\\experiment-616"
+#staging_dir="C:\\Users\\Brandon\\Desktop\\MINIGOLFUS\\exports\\_STAGING\\experiment-616"
+staging_dir="D:\\carmanjaro\\renamer"
 file_list = ""
-subject = "putt"
+subject = "car clip"
 titles = []
-tags = "#shorts #minigolf #golf"
+tags = "#shorts #cars #car"
 file_extension = ".mp4"
 
 def get_files(staging_dir):       # 1.Get file names from directory

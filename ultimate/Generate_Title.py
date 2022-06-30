@@ -9,6 +9,7 @@ from tinydb import TinyDB, Query
 from Grammar_Checker import *
 from Grammar_Filter_Custom import*
 
+#must be in ultimate directory when run any script that calls this one, so this script can locate db.json file
 db = TinyDB('db.json')
 space = " "
 subject = "video"
