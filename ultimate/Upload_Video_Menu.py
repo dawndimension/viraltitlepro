@@ -5,7 +5,7 @@ from typing import List
 import PySimpleGUI as sg
 import subprocess
 
-from pyparsing import empty
+from pyparsing import Or, empty
 from Generate_Title import *
 from array import *
 from datetime import datetime
@@ -18,9 +18,11 @@ import pyperclip as pc
 
 #variables
 title = None
-video_count = 0
+video_count = 1
 video_public_datetime = "2022-06-10 21:40:52"
 date_picker_used = False
+#make a single place to store all config later
+video_max_limit = 6
 
 #functions
 def generate_title_loops(message, video_count):
@@ -86,7 +88,30 @@ while True:             # Event Loop
 
     #Generate title clicked
     if event == 'Generate Title':
+        print("Generate Title Clicked...")
         video_count = (values['_upload_count_'])
+        
+        if not str(video_count).isnumeric():
+            print("value not numeric")
+            video_count = 1
+        
+        if not isinstance(video_count, int):
+            print("not an int. not doing anything here")
+        
+        if video_count == "":
+            print("Desired count was empty")
+            video_count = 1
+
+        video_count = int(video_count)
+
+        if video_count > video_max_limit:
+            video_count = video_max_limit
+        if video_count < 1:
+            video_count = 1
+        
+        #reset field to corrected value
+        window.Element('_upload_count_').update(video_count)
+
         title = generate_title_loops(values['_IN_'], video_count)       
         titles_in_table = []
         tags = (values['_TAGS_'])
@@ -94,11 +119,12 @@ while True:             # Event Loop
         
         #tags present
         if tags != "":
+            print("Going thru list of titles...")
             while i < len(title):
-                print("going thru list of titles - "+title[i])            
+                print(title[i])            
                 titles_in_table.append([i+1,title[i]+" "+tags])            
                 i += 1        
-            print("here is output of data list after clicking generate title: ")
+            print("Here is output of data list after clicking generate title: ")
             print(titles_in_table)
 
         #tags not present (aka else)
@@ -134,20 +160,19 @@ while True:             # Event Loop
     
     #upload videos clicked
     if event == '_UPLOAD_':
-        print ("upload videos clicked")
-        video_count = (values['_upload_count_'])
-        print(video_count)
+        print ("=========Upload videos clicked===========")
         video_public_datetime = (values['_DATE_'])  #validate this in prepare_for_upload.py
-        print(video_public_datetime)
+        print("Selected date and time to upload videos: " +str(video_public_datetime))
         #make separate class Upload_Validation.py - ensure all fields valid values. default timestamp if empty is now
-        dir = (values["-DIR-"]) #directory selected will get saved in teh database and used the next time program is opened.
-        print(dir)
+        dir = (values["-DIR-"]) #directory selected will get saved in the database and used the next time program is opened.
+        print("Dir is: "+str(dir))
         upload_interval = (values["_INTERVAL_"]) #save this in db too, default 15, so dont have to touch
-        print(upload_interval)
+        print("Selected upload interval for vidoes: "+str(upload_interval))
 
         #call prepare_all to initiate video selection
         #video count, video directory, titles, timestamp(convert to epoch, then back later), interval
-        successful_prep_for_upload = prepare_all(video_count, dir, titles_in_table, video_public_datetime)
+        #instead of passing in video_count from how many videos upload dropdown, lets just count titles generated and use that.
+        successful_prep_for_upload = prepare_all(dir, titles_in_table, video_public_datetime)
         print ("Video successfully prepared for upload?: "+str(successful_prep_for_upload)+ ".")
 
     #clear titles from table

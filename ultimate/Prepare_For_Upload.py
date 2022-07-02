@@ -15,24 +15,34 @@ from upload_video import *
 import mimetypes
 
 upload_limit = 6
+video_count= 0
 
-def prepare_all(video_count, dir, titles_in_table, video_public_datetime):
+
+def prepare_all(dir, titles_in_table, video_public_datetime):
     successful_prep_for_upload = False
+
+    video_count = len(titles_in_table)
+    print("There are "+str(video_count)+" titles in table so we will try to upload "+str(video_count)+ " videos...")
 
     if not isinstance(video_count, int) or video_count < 1 or video_count > upload_limit:
         print("Video upload count is not valid: "+str(video_count))
         return False
         
     isValidDir = os.path.isdir(dir) 
-    print(isValidDir)
+    print("Is valid directory? "+str(isValidDir))
     if not isValidDir:
         print("Not a valid directory, please enter a valid directory.")
         return False
 
     files_in_dir = get_files(dir)
     if video_count > len(files_in_dir):
-        print("You are trying to upload "+str(video_count)+" videos, but there are only "+str(len(files_in_dir))+"files in the directory.")
+        print("You are trying to upload "+str(video_count)+" videos, but there are "+str(len(files_in_dir))+" files in the directory.")
         return False
+    
+    if video_count != len(titles_in_table):
+        print("You are trying to upload "+str(video_count)+" videos, but you generated "+str(len(titles_in_table))+"titles")
+        return False
+
     select_video_files_for_upload(files_in_dir,titles_in_table, video_count, dir)
 
     #validate timestamp
@@ -69,6 +79,7 @@ def select_video_files_for_upload(files_in_dir, titles_in_table, video_count, di
 
 
 def get_files(staging_dir):       # 1.Get file names from directory  
+    #print("Here are existing files in selected directory...")
     # Get list of all files in a given directory sorted by name
     file_list = sorted( filter( lambda x: os.path.isfile(os.path.join(staging_dir, x)),
                         os.listdir(staging_dir) ) )
