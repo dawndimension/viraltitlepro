@@ -5,6 +5,8 @@ import random
 from Generate_Title import *
 import glob
 import shutil
+import webbrowser
+import subprocess
 
 # importing all the
 # functions defined in test.py
@@ -30,15 +32,18 @@ import shutil
 
 #can be a separate product from viral title pro. Will have it's own simple GUI and will be a free bonus software
 
-video_count = 14
+video_count = 15
+#directory with video files stored. Copy from here.
 copy_from_dir="C:\\Users\\Brandon\\Desktop\\MINIGOLFUS\\exports\\_STAGING\\Viral_Title_Pro_Uploads"
+#copy_from_dir="F:\\_Dawn_Dimension_Cars\\SHORTS\\motorcycles"
 #careful what you set upload dir as. Files are deleted from upload dir so DO NO set this to location where you store videos!!
 upload_dir="C:\\Users\\Brandon\\Desktop\\MINIGOLFUS\\exports\\_STAGING\\experiment-616"
-#upload_dir="D:\\carmanjaro\\renamer"
+#upload_dir="F:\\_Dawn_Dimension_Cars\\SHORTS\\temp"
 file_list = ""
-subject = "putt putt video"
+subject = "hole in one"
 titles = []
 tags = "#shorts #minigolf #golf"
+#tags = "#motorcycle #motorcycles #shorts"
 file_extension = ".mp4"
 
 def get_files(upload_dir):       # 1.Get file names from directory
@@ -135,7 +140,13 @@ def copy_video_files_for_upload(files_in_dir, video_count, src_folder, dst_folde
 
     return True
 
+def openBrowser():
+    url = 'https://studio.youtube.com/channel/UCqllDv8i68zxziA2k6GaGDA/videos/upload?d=ud&filter=%5B%5D&sort=%7B%22columnType%22%3A%22date%22%2C%22sortOrder%22%3A%22DESCENDING%22%7D'
+    webbrowser.open(url, new=2)
 
+def openFolder():
+  #subprocess.Popen(r'explorer /select,"C:\Users\Brandon\Desktop\MINIGOLFUS\exports\_STAGING\experiment-616\"')
+  subprocess.Popen('explorer "C:\\Users\\Brandon\\Desktop\\MINIGOLFUS\\exports\\_STAGING\\experiment-616\\"')
 
 #optional - copy files randomly from videos directory into this directory
 #delete files in upload dir before copying new ones over. the folder is a temporary one. 
@@ -146,7 +157,8 @@ Success = copy_video_files_for_upload(files_in_dir, video_count, copy_from_dir, 
 
 file_list = get_files(upload_dir)
 Success = rename_files_handler(file_list, upload_dir)
-
+openBrowser()
+openFolder()
 
 
 
